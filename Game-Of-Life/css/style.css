@@ -1,0 +1,52 @@
+.black-cell {
+  color: black;
+  background-color: black;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  padding: 1px;
+  display: inline-block;
+  line-height: 0px;
+  font-size: 0px;
+}
+
+.red-cell {
+  color: red;
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  padding: 1px;
+  display: inline-block;
+  line-height: 0px;
+  font-size: 0px;
+}
+
+.black-cell:hover {
+  background-color: #817b53;
+}
+
+h2, h3 {
+  text-align: center;
+  margin: 30px;
+}
+
+body {
+  margin: 30px;
+  background-color: #ececec;
+}
+
+.board {
+  width: 802px;
+  font-size: 0px;
+  padding: 0px;
+  background: #3b3c3d;
+  margin: 0px auto;
+  -webkit-box-shadow: 0px 0px 51px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 51px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 51px 0px rgba(0, 0, 0, 0.75);
+}
+
+button {
+  margin: 7px;
+}

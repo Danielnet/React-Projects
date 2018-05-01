@@ -1,0 +1,59 @@
+function createMarkup(x) {
+  return { __html: x };
+}
+
+class Output extends React.Component {
+  render() {
+    return (
+      <div
+        className="container outputWindow"
+        dangerouslySetInnerHTML={createMarkup(marked(this.props.state.value))}
+      />
+    );
+  }
+}
+
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: dummyText()
+    };
+  }
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+  inputWindow() {
+    return (
+      <textarea
+        rows="20"
+        className="txt"
+        value={this.state.value}
+        onChange={this.handleChange.bind(this)}
+      />
+    );
+  }
+  render() {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <h1>
+              <mark>Markdown Previewer</mark>
+            </h1>
+          </div>
+          <div className="col-md-6">{this.inputWindow()}</div>
+          <div className="col-md-6">
+            <Output state={this.state} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+function dummyText() {
+  return "Heading\n=======\n\nSub-heading\n-----------\n \n### Another deeper heading\n \nParagraphs are separated\nby a blank line.\n\nLeave 2 spaces at the end of a line to do a  \nline break\n\nText attributes *italic*, **bold**, \n`monospace`, ~~strikethrough~~ .\n\nShopping list:\n\n  * apples\n  * oranges\n  * pears\n\nNumbered list:\n\n  1. apples\n  2. oranges\n  3. pears\n\nThe rain---not the reign---in\nSpain.\n\n *[Herman Fassett](https://freecodecamp.com/hermanfassett)*";
+}
+
+ReactDOM.render(<Main />, document.getElementById("container"));

@@ -1,0 +1,29 @@
+h1 {
+  background: #125512;
+  margin-top: 15px;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 200;
+}
+
+.pics {
+  height: 40px;
+}
+
+.active {
+  background: #dbffdb;
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
+.underlined:hover {
+  cursor: pointer;
+}
+
+a {
+  color: #4076b0;
+}

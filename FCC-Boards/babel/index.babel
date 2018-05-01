@@ -1,0 +1,99 @@
+const recent = "https://fcctop100.herokuapp.com/api/fccusers/top/recent";
+const alltime = "https://fcctop100.herokuapp.com/api/fccusers/top/alltime";
+const fccUrl = "https://www.freecodecamp.org/";
+
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      obj: [],
+      isLoading: false,
+      dataReady: false
+    };
+  }
+
+  getData(url) {
+    this.setState({ isLoading: true });
+    fetch(url)
+      .then(response => response.json())
+      .then(data =>
+        this.setState({ obj: data, isLoading: false, dataReady: true })
+      );
+  }
+
+  componentDidMount() {
+    this.getData(recent);
+  }
+
+  _renderObject() {
+    if (this.state.obj !== undefined) {
+      return Object.entries(this.state.obj).map(([key, value], i) => {
+        return (
+          <tr key={key}>
+            <th scope="row">
+              <strong>{i + 1}</strong>
+            </th>
+            <td>
+              <img className="pics" src={value.img} />
+            </td>
+            <td>
+              <a href={fccUrl+value.username}>{value.username}</a>
+            </td>
+            <td>{value.recent}</td>
+            <td>{value.alltime}</td>
+          </tr>
+        );
+      });
+    }
+  }
+
+  _getRecent = () => {
+    this.getData(recent);
+  };
+
+  _getAlltime = () => {
+    this.getData(alltime);
+  };
+
+  render() {
+    var arr = [];
+    for (var prop in this.state.obj) {
+      arr.push(this.state.obj[prop]);
+    }
+
+    if (this.state.isLoading || !this.state.dataReady) {
+      return <p>Loading ...</p>;
+    } else
+      return (
+        <div className="container mainContainer">
+          <h1>FCC Leaderboards</h1>
+          <table className="table table-striped">
+            <thead>
+              <tr className="firstCol">
+                <th scope="col">
+                  <strong>#</strong>
+                </th>
+                <th scope="col" />
+                <th scope="col">
+                  <strong>Username</strong>
+                </th>
+                <th scope="col">
+                  <strong className="underlined">
+                    <div onClick={this._getRecent}>Points Last 30 days</div>
+                  </strong>
+                </th>
+                <th scope="col">
+                  <strong className="underlined">
+                    <div onClick={this._getAlltime}>Points Alltime</div>
+                  </strong>
+                </th>
+              </tr>
+            </thead>
+            <tbody>{this._renderObject()}</tbody>
+          </table>
+        </div>
+      );
+  }
+}
+
+ReactDOM.render(<Main />, document.getElementById("container"));

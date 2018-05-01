@@ -1,0 +1,245 @@
+   //****************************************************
+   //  Conway's Game of Life
+   //***************************************************
+
+let t = 0;
+let myVar;
+class Board extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      cellAmount: 2640,
+      generations: 0
+    };
+  }
+
+  componentWillMount() {
+    this.reset();
+  }
+
+  handleClick = id => {
+    let boardcopy = cloneArray(this.state.boardArr);
+    if (this.state.boardArr[id].props.className === "black-cell") {
+      boardcopy[id] = this.createcell(id, "red-cell", id + 684684);
+      this.setState({
+        boardArr: boardcopy
+      });
+    } else {
+      boardcopy[id] = this.createcell(id, "black-cell", id + 684468684468);
+      this.setState({
+        boardArr: boardcopy
+      });
+    }
+  };
+  getI(y, x) {
+    return this.getY(y) * 8 * 10 + this.getX(x);
+  }
+
+  getX(i) {
+    return i % 80;
+  }
+
+  getY(i) {
+    return Math.floor(i / 80);
+  }
+
+  reset() {
+    console.log("reset");
+    const arr = [];
+    for (let i = 0; i < this.state.cellAmount; i++) {
+      arr.push(
+        <Cell
+          key={i}
+          cellid={i}
+          className="black-cell"
+          handleClick={this.handleClick}
+          coordX={this.getX(i)}
+          coordY={this.getY(i)}
+        />
+      );
+    }
+    this.setState(prevState => {
+      return {
+        boardArr: arr,
+        generations: 0
+      };
+    });
+  }
+
+  seed() {
+    console.log("seed");
+    const arr = [];
+    for (let i = 0; i < this.state.cellAmount; i++) {
+      if (Math.floor(Math.random() * 5) === 1) {
+        arr.push(
+          <Cell
+            key={i}
+            cellid={i}
+            className="red-cell"
+            handleClick={this.handleClick}
+            coordX={this.getX(i)}
+            coordY={this.getY(i)}
+          />
+        );
+      } else
+        arr.push(
+          <Cell
+            key={i}
+            cellid={i}
+            className="black-cell"
+            handleClick={this.handleClick}
+            coordX={this.getX(i)}
+            coordY={this.getY(i)}
+          />
+        );
+    }
+    this.setState(prevState => {
+      return { boardArr: arr };
+    });
+  }
+
+  createcell = (i, c, z) => {
+    if (z === undefined) {
+      z = i;
+    }
+    return (
+      <Cell
+        key={z}
+        cellid={i}
+        className={c}
+        handleClick={this.handleClick}
+        coordX={this.getX(i)}
+        coordY={this.getY(i)}
+      />
+    );
+  };
+
+  play = () => {
+    if (t % 2 === 0) {
+      myVar = setInterval(this.playLogic, 10);
+      document.getElementById("play").innerHTML = "Stop";
+    } else {
+      clearInterval(myVar);
+      document.getElementById("play").innerHTML = "Play";
+    }
+    t++;
+  };
+
+  playLogic = () => {
+    let g = this.state.boardArr;
+    let g2 = cloneArray(this.state.boardArr);
+    let cols = 80;
+    for (var z = 0; z < g2.length; z++) {
+      let cellStatus = g[z].props.className;
+      let amount = 0;
+      let neighbors = [];
+      neighbors = [
+        g[z + 1] === undefined
+          ? false
+          : g[z + 1].props.className === "red-cell", //right
+        g[z - 1] === undefined
+          ? false
+          : g[z - 1].props.className === "red-cell", //left
+        g[z - cols] === undefined
+          ? false
+          : g[z - cols].props.className === "red-cell", //up
+        g[z - (cols - 1)] === undefined
+          ? false
+          : g[z - (cols - 1)].props.className === "red-cell", //up-left
+        g[z - (cols + 1)] === undefined
+          ? false
+          : g[z - (cols + 1)].props.className === "red-cell", //up-right
+        g[z + cols] === undefined
+          ? false
+          : g[z + cols].props.className === "red-cell", //down
+        g[z + cols - 1] === undefined
+          ? false
+          : g[z + cols - 1].props.className === "red-cell", //down-left
+        g[z + cols + 1] === undefined
+          ? false
+          : g[z + cols + 1].props.className === "red-cell" //down-right
+      ];
+
+      for (let c in neighbors) {
+        if (neighbors[c] === true) {
+          amount++;
+        }
+      }
+
+      //****************************************************
+      // the rules of Conways Game of Life
+      //***************************************************
+
+      if (cellStatus === "red-cell") {
+        if (amount < 2 || amount > 3) {
+          g2[z] = this.createcell(z, "black-cell", z + 68454884);
+        }
+      }
+
+      if (cellStatus === "black-cell") {
+        if (amount === 3) {
+          g2[z] = this.createcell(z, "red-cell", z + 32486343484);
+        }
+      }
+    }
+
+    this.setState({
+      boardArr: g2,
+      generations: this.state.generations + 1
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <h2>
+          John Conway's <strong>Game of life</strong>
+        </h2>
+        <div className="board">{this.state.boardArr}</div>
+        <div className="text-center">
+        <h2>Generations : {this.state.generations}</h2>
+        <button onClick={e => this.reset(e)}>Clear</button>
+        <button onClick={e => this.seed(e)}>Seed</button>
+        <button id="play" onClick={e => this.play(e)}>
+          play
+        </button>
+        </div>
+      </div>
+    );
+  }
+}
+
+class Cell extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: this.props.cellid
+    };
+  }
+
+  selectCell = () => {
+    this.props.handleClick(this.props.cellid);
+  };
+
+  render() {
+    return (
+      <div
+        cellid={this.props.cellid}
+        color={this.props.color}
+        className={this.props.className}
+        x={this.props.coordX}
+        y={this.props.coordY}
+        onClick={this.selectCell}
+      />
+    );
+  }
+}
+
+function cloneArray(arr) {
+  return arr.slice();
+
+  //  return JSON.parse(JSON.stringify(arr))
+}
+
+ReactDOM.render(<Board />, document.getElementById("container"));

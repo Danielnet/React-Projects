@@ -1,0 +1,17 @@
+.txt {
+  resize: vertical;
+  height: 100%;
+  width: 100%;
+}
+
+.outputWindow {
+  border: 1px solid grey;
+}
+
+body {
+  margin-top: 20px;
+}
+
+.col-md-12 {
+  padding-bottom: 10px;
+}
